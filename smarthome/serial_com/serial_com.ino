@@ -3,15 +3,23 @@ const int ledPin = 13;
 void setup()
 {
   Serial.begin(9600);
+  Serial.setTimeout(10);
   pinMode(ledPin, OUTPUT);
 }
 void loop()
 {
   while (Serial.available())  {
-    const char* message = Serial.read()-'0';  // on soustrait le caractère 0, qui vaut 48 en ASCII
-    light(message);
+    String message = Serial.readString();  // on soustrait le caractère 0, qui vaut 48 en ASCII
+    message = message.substring(0, message.length()-1);
+    // light(message);
+    Serial.println(message);
+    if(message.compareTo(String("1"))==0) {
+      digitalWrite(ledPin, HIGH);
+    }
+    else if (message.compareTo(String("0"))==0) {
+      digitalWrite(ledPin, LOW);   
+    }
   }
-  delay(500);
 }
 
 void light(int n){
